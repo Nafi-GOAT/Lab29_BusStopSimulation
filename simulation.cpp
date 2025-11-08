@@ -17,4 +17,12 @@ enum Stage { WAITING = 0, ONBUS = 1, LEFT = 2 };
 using Buckets = array<list<string>, 3>;
 using Env = map<string, Buckets>;
 
+int stage_from_string(const string& s) {
+    if (s == "WAITING") return WAITING;
+    if (s == "ONBUS")   return ONBUS;
+    if (s == "LEFT")    return LEFT;
+    return 1;
+}
+
+
 
