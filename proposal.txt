@@ -1,0 +1,41 @@
+Project Overview — Bus Stop Discrete-Event Simulation
+
+Goal:
+Simulate people moving through a small bus system over time. Each stop has people who are
+WAITING, ONBUS, or LEFT (finished their trip). The simulation is time-based (discrete
+periods) and shows how counts change at each stop.
+
+Data Model:
+I will use std::map<std::string, std::array<std::list<std::string>, 3>>.
+- Key (map): stop name like "Stop-A", "Stop-B", "Stop-C".
+- Value (array of three lists):
+  [0] WAITING: passenger IDs waiting at the stop
+  [1] ONBUS:   passenger IDs currently riding
+  [2] LEFT:    passenger IDs who finished and left the system
+
+Input:
+Data will be read from an external CSV file (at least 100 lines for the final project),
+one passenger per line, like:
+Stop-A,WAITING,P001
+Stop-B,ONBUS,P114
+Stop-C,LEFT,P300
+
+Events Each Period:
+- Some WAITING passengers board the bus → move to ONBUS.
+- Some ONBUS passengers finish and get off → move to LEFT.
+- Occasionally new WAITING passengers arrive at a stop.
+
+Time:
+I will simulate at least 25 time periods (e.g., t = 1..25) and print the state at the
+start and after selected periods.
+
+Functions:
+- stage_from_string(): convert text to index 0/1/2
+- load_data(path, env): read CSV into the map
+- print_env(env, period): print a compact table of counts
+- simulate_step(env, t): perform one period of moves
+
+What the Program Shows:
+Initial counts per stop, then how people flow from WAITING → ONBUS → LEFT across time.
+This demonstrates a discrete-event simulation with the required nested data structure
+and file input.
