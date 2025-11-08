@@ -11,3 +11,9 @@
 #include <list>
 #include <iomanip>
 using namespace std;
+
+// ---- stages ----
+enum Stage { WAITING = 0, ONBUS = 1, LEFT = 2 };
+using Buckets = array<list<string>, 2>;
+using Env = map<string, Buckets>;
+
