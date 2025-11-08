@@ -10,7 +10,34 @@
 #include <array>
 #include <list>
 #include <iomanip>
+#include <fstream>
+#include <sstream>
 using namespace std;
+
+void load_data(const string& filename, Env& env) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error: could not open " << filename << endl;
+        return;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string stop, stage, id;
+
+        getline(ss, stop, ',');
+        getline(ss, stage, ',');
+        getline(ss, id, ',');
+
+        int index = stage_from_string(stage);
+        if (index >= 0) {
+            env[stop][index].push_back(id);
+        }
+    }
+
+    file.close();
+}
 
 // ---- stages ----
 enum Stage { WAITING = 0, ONBUS = 1, LEFT = 2 };
@@ -86,6 +113,7 @@ int main() {
     cout << "\nSimulation complete.\n";
     return 0;
 }
+
 
 
 
