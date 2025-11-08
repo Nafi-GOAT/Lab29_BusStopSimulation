@@ -94,25 +94,23 @@ void simulate_step(Env& env, int t) {
 
 int main() {
 
+   int main() {
     Env env;
 
-    // MOCKUP data for Lab 29: one seed item to prove structure works
-    env["Stop-A"][WAITING].push_back("P001");
-    env["Stop-B"][ONBUS  ].push_back("P120");
-    env["Stop-C"][LEFT   ].push_back("P300");
-
+    load_data("busdata.csv", env);
     print_env(env, -1);
 
     const int PERIODS = 25;
     for (int t = 1; t <= PERIODS; ++t) {
         simulate_step(env, t);
-        // For Lab 29 we can print every 5 periods to keep output short
         if (t % 5 == 0) print_env(env, t);
     }
 
     cout << "\nSimulation complete.\n";
     return 0;
 }
+
+
 
 
 
