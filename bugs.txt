@@ -1,0 +1,12 @@
+Bug Log — Bus Stop Simulation (Beta Version)
+
+1. File not found error — fixed by checking file open status in load_data().
+2. Wrong output order — fixed by using std::setw() formatting in print_env().
+3. Crash on empty lines — added line.empty() check in load_data().
+4. Incorrect stage mapping — added default return -1 in stage_from_string().
+5. Duplicated int main() — removed extra definition.
+6. Passengers not moving properly — fixed simulate_step() logic (FIFO lists).
+7. Wrong counts shown after time step — corrected print_env() call every 5 steps.
+8. New passengers not appearing — fixed by adding t % 3 condition in simulate_step().
+9. CSV lines with wrong stage — fixed by ignoring bad stage index (<0).
+10. Extra blank output lines — reduced unnecessary endl calls.
