@@ -59,13 +59,33 @@ void simulate_step(Env& env, int t) {
             buckets[ONBUS].pop_front();
             buckets[LEFT].push_back(id);
         }
-        if (t % 2 == 0) {
+        if (t % 3 == 0) {
             buckets[WAITING].push_back("N" + to_string(t) + "_" + stop);
         }
     }
 }
 
 int main() {
+
+    Env env;
+
+    // MOCKUP data for Lab 29: one seed item to prove structure works
+    env["Stop-A"][WAITING].push_back("P001");
+    env["Stop-B"][ONBUS  ].push_back("P120");
+    env["Stop-C"][LEFT   ].push_back("P300");
+
+    print_env(env, -1);
+
+    const int PERIODS = 25;
+    for (int t = 1; t <= PERIODS; ++t) {
+        simulate_step(env, t);
+        // For Lab 29 we can print every 5 periods to keep output short
+        if (t % 5 == 0) print_env(env, t);
+    }
+
+    cout << "\nSimulation complete.\n";
+    return 0;
+}
 
 
 
