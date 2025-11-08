@@ -1,1 +1,82 @@
+this goes in you testing.txt file
 
+Unit Testing Plan — Bus Stop Simulation (Alpha)
+
+Goal:
+Make sure small parts (functions) work before running the full simulation.
+We will test:
+1) stage_from_string(): turns "WAITING"/"ONBUS"/"LEFT" into the right number.
+2) insert_from_csv_line(): reads one CSV line and puts the passenger ID into
+   the correct list inside the map.
+
+How I will test:
+I will use a tiny C++ program (driver). It calls the functions with good and bad
+inputs and prints simple messages. For example, "WAITING" should map to the
+WAITING number. A wrong word like "BOARDING" should be rejected (-1). For CSV
+lines, good lines go into the map; bad lines are ignored.
+
+Expected result:
+The test will print the counts for each list. If the counts match what we expect,
+the test passed.
+
+----- BEGIN: test_driver.cpp -----
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <map>
+#include <array>
+#include <list>
+using namespace std;
+
+enum Stage { WAITING = 0, ONBUS = 1, LEFT = 2 };
+using Buckets = array<list<string>, 3>;
+using Env = map<string, Buckets>;
+
+int stage_from_string(const string& s) {
+    if (s == "WAITING") return WAITING;
+    if (s == "ONBUS")   return ONBUS;
+    if (s == "LEFT")    return LEFT;
+    return -1;
+}
+
+bool insert_from_csv_line(const string& line, Env& env){
+    if (line.empty()) return false;
+    string stop, stageStr, pid;
+    stringstream ss(line);
+    if(!getline(ss, stop, ','))     return false;
+    if(!getline(ss, stageStr, ',')) return false;
+    if(!getline(ss, pid, ','))      return false;
+
+    int st = stage_from_string(stageStr);
+    if (st < 0) return false;
+
+    env[stop][st].push_back(pid);
+    return true;
+}
+
+int main(){
+    cout << "Testing stage_from_string()...\n";
+    if (stage_from_string("WAITING") != WAITING) cout << "FAIL: WAITING\n";
+    if (stage_from_string("ONBUS")   != ONBUS)   cout << "FAIL: ONBUS\n";
+    if (stage_from_string("LEFT")    != LEFT)    cout << "FAIL: LEFT\n";
+    if (stage_from_string("BOARDING") != -1)     cout << "FAIL: bad word\n";
+    else cout << "stage_from_string looks good.\n";
+
+    cout << "\nTesting insert_from_csv_line()...\n";
+    Env env;
+    insert_from_csv_line("Stop-A,WAITING,P001", env);
+    insert_from_csv_line("Stop-A,ONBUS,P011",   env);
+    insert_from_csv_line("Stop-A,LEFT,P016",    env);
+    insert_from_csv_line("Stop-B,WAITING,P021", env);
+    insert_from_csv_line("Stop-C,WRONG,P099",   env); // should be ignored
+
+    cout << "Stop-A WAITING: " << env["Stop-A"][WAITING].size() << "\n";
+    cout << "Stop-A ONBUS:   " << env["Stop-A"][ONBUS].size()  << "\n";
+    cout << "Stop-A LEFT:    " << env["Stop-A"][LEFT].size()   << "\n";
+    cout << "Stop-B WAITING: " << env["Stop-B"][WAITING].size() << "\n";
+    cout << "Stop-C LEFT:    " << env["Stop-C"][LEFT].size()   << "\n";
+
+    cout << "\nIf these counts match what we expect, the test passed.\n";
+    return 0;
+}
+----- END: test_driver.cpp -----
