@@ -93,8 +93,6 @@ void simulate_step(Env& env, int t) {
 }
 
 int main() {
-
-   int main() {
     Env env;
 
     load_data("busdata.csv", env);
@@ -111,6 +109,7 @@ int main() {
 }
 
 // Alpha version: includes file input and map structure
+
 
 
 
