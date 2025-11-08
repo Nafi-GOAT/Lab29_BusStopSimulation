@@ -14,6 +14,18 @@
 #include <sstream>
 using namespace std;
 
+// ---- stages ----
+enum Stage { WAITING = 0, ONBUS = 1, LEFT = 2 };
+using Buckets = array<list<string>, 3>;
+using Env = map<string, Buckets>;
+
+int stage_from_string(const string& s) {
+    if (s == "WAITING") return WAITING;
+    if (s == "ONBUS")   return ONBUS;
+    if (s == "LEFT")    return LEFT;
+    return -1;
+}
+
 void load_data(const string& filename, Env& env) {
     ifstream file(filename);
     if (!file.is_open()) {
@@ -37,18 +49,6 @@ void load_data(const string& filename, Env& env) {
     }
 
     file.close();
-}
-
-// ---- stages ----
-enum Stage { WAITING = 0, ONBUS = 1, LEFT = 2 };
-using Buckets = array<list<string>, 3>;
-using Env = map<string, Buckets>;
-
-int stage_from_string(const string& s) {
-    if (s == "WAITING") return WAITING;
-    if (s == "ONBUS")   return ONBUS;
-    if (s == "LEFT")    return LEFT;
-    return -1;
 }
 
 void print_env(const Env& env, int period = -1) {
@@ -91,9 +91,6 @@ void simulate_step(Env& env, int t) {
         }
     }
 }
-
-int main() {
-
    int main() {
     Env env;
 
@@ -110,5 +107,6 @@ int main() {
     return 0;
 }
 
-// Alpha version: includes file input and map structure
+// Beta Version for release
+
 
